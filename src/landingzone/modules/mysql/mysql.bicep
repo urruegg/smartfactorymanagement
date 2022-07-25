@@ -1,5 +1,5 @@
 @description('MySQL Server SKU')
-param mySQLServerSku string = 'Standard_B1ms'
+param mySQLServerSku string = 'Standard_D4ds_v4'
 
 @description('Database administrator login name')
 @minLength(1)
@@ -40,16 +40,16 @@ resource mySQLServer 'Microsoft.DBforMySQL/flexibleServers@2021-05-01' = {
   location: primaryLocation
   sku: {
     name: mySQLServerSku
-    tier: 'Burstable'
+    tier: 'GeneralPurpose'
   }
   properties: {
     createMode: 'Default'
-    version: '8.0.21'
+    version: '5.7'
     administratorLogin: administratorLogin
     administratorLoginPassword: administratorPassword
     storage: {
-      storageSizeGB: 30
-      iops: 360
+      storageSizeGB: 64
+      iops: 492
       autoGrow: 'Enabled'
     }
     backup: {
