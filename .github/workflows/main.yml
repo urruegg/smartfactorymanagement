@@ -1,0 +1,26 @@
+on: [push]
+name: Azure ARM
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+
+      # Checkout code
+    - uses: actions/checkout@main
+
+      # Log into Azure
+    - uses: azure/login@v1
+      with:
+        client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      # Deploy Bicep file
+    - name: deploy
+      uses: azure/arm-deploy@v1
+      with:
+        subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
+        resourceGroupName: ${{ secrets.AZURE_RG }}
+        template: ./src/landingzone/main.bicep
+        parameters: 'baseName=smartfactorymanagement vm_admin_name=${{ secrets.VM_ADMIN_NAME }} vm_admin_password=${{ secrets.VM_ADMIN_PASSWORD }} publicKey=${{ secrets.PUBLIC_KEY}} allow_ssh_and_rdp_via_public_ip="true"'
+        failOnStdErr: false
