@@ -1,0 +1,17 @@
+baseName="smartfactorymanagement"
+pubkeydata=$(cat ~/.ssh/id_rsa.pub)
+vm_admin_name=$(whoami)
+resource_group_name="smartfactorymanagement"
+allow_ssh_and_rdp_via_public_ip="true"
+
+# Create / Update the deployment (replace AAD Group ID)
+az deployment group create -n "$baseName-main" -f main.bicep \
+    --resource-group "$resource_group_name" \
+    --parameters baseName="$baseName" \
+    --parameters vm_admin_name="$vm_admin_name" \
+    --parameters publicKey="$pubkeydata" \
+    --parameters allow_ssh_and_rdp_via_public_ip="$allow_ssh_and_rdp_via_public_ip"
+   
+# Cleanup. Delete the Deployment
+# az deployment group delete -n "$baseline-main" \
+    --resource-group "$resource_group_name"

@@ -1,33 +1,55 @@
-@minLength(3)
-@maxLength(11)
-param storagePrefix string
-
-@allowed([
-  'Standard_LRS'
-  'Standard_GRS'
-  'Standard_RAGRS'
-  'Standard_ZRS'
-  'Premium_LRS'
-  'Premium_ZRS'
-  'Standard_GZRS'
-  'Standard_RAGZRS'
-])
-param storageSKU string = 'Standard_LRS'
-
 param location string = resourceGroup().location
+param baseName string
+param vm_admin_name string
+param allow_ssh_and_rdp_via_public_ip bool = true
 
-var uniqueStorageName = '${storagePrefix}${uniqueString(resourceGroup().id)}'
+@secure()
+param publicKey string
 
-resource stg 'Microsoft.Storage/storageAccounts@2021-04-01' = {
-  name: uniqueStorageName
-  location: location
-  sku: {
-    name: storageSKU
-  }
-  kind: 'StorageV2'
-  properties: {
-    supportsHttpsTrafficOnly: true
+@secure()
+param vm_admin_password string
+
+module vnet 'modules/vnet/vnet.bicep' = {
+  name: 'vnet-${baseName}'
+  params: {
+    vnetNamePrefix: baseName
+    location: location
+    allow_ssh_and_rdp_via_public_ip: allow_ssh_and_rdp_via_public_ip
   }
 }
 
-output storageEndpoint object = stg.properties.primaryEndpoints
+module vm_ubuntu 'modules/vm-ubuntu/vm.bicep' = {
+  name: 'vm_ubuntu_${baseName}'
+  params: {
+    location: location
+    subnetId: vnet.outputs.vnetSubnets[0].id
+    tag_application: baseName
+    vm_name: 'vm-ubuntu'
+    vm_admin_name: vm_admin_name
+    publicKey: publicKey
+  }
+}
+
+module vm_windows 'modules/vm-windows/vm.bicep' = {
+  name: 'vm_windows_${baseName}'
+  params: {
+    location: location
+    subnetId: vnet.outputs.vnetSubnets[0].id
+    tag_application: baseName
+    vm_name: 'vm-windows'
+    vm_admin_name: vm_admin_name
+    vm_admin_password: vm_admin_password
+  }
+}
+
+module mysql 'modules/mysql/mysql.bicep' = {
+  name: 'mysql_${baseName}'
+  params: {
+    primaryLocation: location
+    administratorLogin: vm_admin_name
+    administratorPassword: vm_admin_password
+    baseName: baseName
+    delegatedSubnetResourceId: vnet.outputs.vnetSubnets[1].id
+    vnetIdForDNSZoneLink: vnet.outputs.vnetId
+  }
+}
