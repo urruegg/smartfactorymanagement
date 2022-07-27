@@ -22,5 +22,5 @@ jobs:
         subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
         resourceGroupName: ${{ secrets.AZURE_RG }}
         template: ./src/landingzone/main.bicep
-        parameters: 'baseName=smartfactorymanagement vm_admin_name=${{ secrets.VM_ADMIN_NAME }} vm_admin_password=${{ secrets.VM_ADMIN_PASSWORD }} publicKey=${{ secrets.PUBLIC_KEY}} allow_ssh_and_rdp_via_public_ip="true"'
+        parameters: 'baseName=smartfactorymanagement vm_admin_name="${{ secrets.VM_ADMIN_NAME }}" vm_admin_password="${{ secrets.VM_ADMIN_PASSWORD }}" publicKey="${{ secrets.PUBLIC_KEY}}" allow_ssh_and_rdp_via_public_ip="true"'
         failOnStdErr: false
