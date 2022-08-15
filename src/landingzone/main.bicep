@@ -1,7 +1,7 @@
 param location string = resourceGroup().location
 param baseName string
 param vm_admin_name string
-param allow_ssh_and_rdp_via_public_ip bool = true
+param allow_ssh_and_rdp_via_public_ip bool = false
 
 @secure()
 param publicKey string
@@ -51,5 +51,17 @@ module mysql 'modules/mysql/mysql.bicep' = {
     baseName: baseName
     delegatedSubnetResourceId: vnet.outputs.vnetSubnets[1].id
     vnetIdForDNSZoneLink: vnet.outputs.vnetId
+  }
+}
+
+
+module iothub 'modules/iothub/iothub.bicep' = {
+  name: 'iothub-${baseName}'
+  params: {
+    baseName: baseName
+    location: location
+    skuName: 'S1'
+    skuUnits: 1
+    d2cPartitions: 4
   }
 }

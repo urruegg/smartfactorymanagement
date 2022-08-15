@@ -1,4 +1,4 @@
-baseName="smartfactorymanagement"
+baseName="zurusesfm"
 pubkeydata=$(cat ~/.ssh/id_rsa.pub)
 vm_admin_name=$(whoami)
 resource_group_name="smartfactorymanagement"
