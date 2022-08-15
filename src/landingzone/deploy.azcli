@@ -1,7 +1,7 @@
 baseName="zurusesfm"
 pubkeydata=$(cat ~/.ssh/id_rsa.pub)
 vm_admin_name=$(whoami)
-resource_group_name="smartfactorymanagement"
+resource_group_name="zurusesfm"
 allow_ssh_and_rdp_via_public_ip="true"
 
 # Create / Update the deployment (replace AAD Group ID)
