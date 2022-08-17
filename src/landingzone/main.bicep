@@ -24,7 +24,7 @@ module vm_ubuntu 'modules/vm-ubuntu/vm.bicep' = {
     location: location
     subnetId: vnet.outputs.vnetSubnets[0].id
     tag_application: baseName
-    vm_name: 'vm-ubuntu'
+    vm_name: 'vm_ubuntu_${baseName}'
     vm_admin_name: vm_admin_name
     publicKey: publicKey
   }
@@ -36,7 +36,7 @@ module vm_windows 'modules/vm-windows/vm.bicep' = {
     location: location
     subnetId: vnet.outputs.vnetSubnets[0].id
     tag_application: baseName
-    vm_name: 'vm-windows'
+    vm_name: 'vm_windows_${baseName}'
     vm_admin_name: vm_admin_name
     vm_admin_password: vm_admin_password
   }
