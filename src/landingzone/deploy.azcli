@@ -2,7 +2,7 @@ baseName="zurusesfm"
 pubkeydata=$(cat ~/.ssh/id_rsa.pub)
 vm_admin_name=$(whoami)
 resource_group_name="zurusesfm"
-allow_ssh_and_rdp_via_public_ip="true"
+allow_ssh_and_rdp_via_public_ip="false"
 
 # Create / Update the deployment (replace AAD Group ID)
 az deployment group create -n "$baseName-main" -f main.bicep \
@@ -14,4 +14,4 @@ az deployment group create -n "$baseName-main" -f main.bicep \
    
 # Cleanup. Delete the Deployment
 # az deployment group delete -n "$baseline-main" \
-    --resource-group "$resource_group_name"
+#    --resource-group "$resource_group_name"
