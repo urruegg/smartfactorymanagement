@@ -25,7 +25,7 @@ resource linux_publicip 'Microsoft.Network/publicIPAddresses@2020-11-01' = {
   properties: {
     publicIPAllocationMethod: 'Static'
     dnsSettings: {
-      domainNameLabel: '${resourcegroup_name}linux'
+      domainNameLabel: toLower('${resourcegroup_name}linux')
     }
   }
 }
